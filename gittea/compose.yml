@@ -39,4 +39,4 @@ networks:
 
 volumes:
   gitea:
-  mysql
+  mysql:
