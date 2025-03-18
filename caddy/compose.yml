@@ -1,7 +1,5 @@
 services:
   caddy:
-    env_file:
-      - .env
     container_name: caddy
     image: ghcr.io/authcrunch/authcrunch:latest
     restart: unless-stopped
