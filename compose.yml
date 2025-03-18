@@ -2,3 +2,4 @@ include:
   - ./caddy/compose.yml
   # - ./growi/compose.yml
   - ./keycloak/compose.yml
+  - ./gittea/compose.yml
