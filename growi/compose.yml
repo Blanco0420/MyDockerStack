@@ -1,0 +1,86 @@
+services:
+
+  app:
+    container_name: growi
+    image: weseek/growi:7
+    # ports:
+    #   - 3000:3000    # localhost only by default
+    links:
+      - mongo:mongo
+      - elasticsearch:elasticsearch
+    depends_on:
+        mongo:
+          condition: service_healthy
+        elasticsearch:
+          condition: service_healthy
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/growi
+      - ELASTICSEARCH_URI=http://elasticsearch:9200/growi
+      - PASSWORD_SEED
+      # - FILE_UPLOAD=mongodb   # activate this line if you use MongoDB GridFS rather than AWS
+      # - FILE_UPLOAD=local     # activate this line if you use local storage of server rather than AWS
+      # - MATHJAX=1             # activate this line if you want to use MathJax
+      # - PLANTUML_URI=http://  # activate this line and specify if you use your own PlantUML server rather than public plantuml.com
+      # - FORCE_WIKI_MODE='public'    # activate this line to force wiki public mode
+      # - FORCE_WIKI_MODE='private'   # activate this line to force wiki private mode
+
+    entrypoint: "/docker-entrypoint.sh"
+    command: ["npm run migrate && node -r dotenv-flow/config --expose_gc dist/server/app.js"]
+
+    restart: unless-stopped
+    volumes:
+      - growi_data:/data
+    networks:
+      - caddy-net
+      - backend
+
+  mongo:
+    image: mongo:6.0
+    restart: unless-stopped
+    volumes:
+      - mongo_configdb:/data/configdb
+      - mongo_db:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.runCommand('ping').ok", "--quiet"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+    networks:
+      - backend
+
+  elasticsearch:
+    build:
+      context: ./elasticsearch/v8
+      dockerfile: ./Dockerfile
+    environment:
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms256m -Xmx256m"  # increase amount if you have enough memory
+      - LOG4J_FORMAT_MSG_NO_LOOKUPS=true # CVE-2021-44228 mitigation for Elasticsearch <= 6.8.20/7.16.0
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    restart: unless-stopped
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+      - ./elasticsearch/v8/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+    networks:
+      - backend
+
+volumes:
+  growi_data:
+  mongo_configdb:
+  mongo_db:
+  es_data:
+  caddy_data:
+  caddy_config:
+
+networks:
+  backend:
+  caddy-net:
+    external: true
