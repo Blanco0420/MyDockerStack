@@ -1,0 +1,28 @@
+services:
+  caddy:
+    env_file:
+      - .env
+    container_name: caddy
+    image: ghcr.io/authcrunch/authcrunch:latest
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./site:/srv
+      - caddy_data:/data
+      - caddy_config:/config
+      - ./certs:/certs:ro
+    networks:
+      - caddy-net
+
+
+volumes:
+  caddy_data:
+  caddy_config:
+
+networks:
+  caddy-net:
+    external: true
