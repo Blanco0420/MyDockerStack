@@ -12,6 +12,7 @@ services:
       - GITEA__database__PASSWD=gitea
     restart: always
     networks:
+      - caddy-net
       - backend
     volumes:
       - gitea:/data
@@ -19,7 +20,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
     ports:
       # - "3000:3000"
-      - "222:22"
+      # - "222:22"
 
   db:
     image: docker.io/library/mysql:8
@@ -36,6 +37,8 @@ services:
 
 networks:
   backend:
+  caddy-net:
+    external: true
 
 volumes:
   gitea:
