@@ -17,7 +17,7 @@ services:
       - gitea_db
     networks:
       - caddy-network
-      - backend
+      - gitea-backend
     volumes:
       - gitea:/data
       - ./themes:/data/themes
@@ -32,7 +32,7 @@ services:
     container_name: gitea_db
     image: docker.io/library/mysql:latest
     networks:
-      - backend
+      - gitea-backend
     restart: always
     env_file:
       - .env
@@ -45,7 +45,7 @@ services:
       - mysql:/var/lib/mysql
 
 networks:
-  backend:
+  gitea-backend:
 
 volumes:
   gitea:

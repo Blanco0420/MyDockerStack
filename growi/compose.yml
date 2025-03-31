@@ -32,7 +32,7 @@ services:
       - growi_data:/data
     networks:
       - caddy-network
-      - backend
+      - growi-backend
 
   mongo:
     image: mongo:6.0
@@ -46,7 +46,7 @@ services:
       timeout: 5s
       retries: 6
     networks:
-      - backend
+      - growi-backend
 
   elasticsearch:
     build:
@@ -70,7 +70,7 @@ services:
       timeout: 5s
       retries: 6
     networks:
-      - backend
+      - growi-backend
 
 volumes:
   growi_data:
@@ -81,6 +81,6 @@ volumes:
   caddy_config:
 
 networks:
-  backend:
+  growi-backend:
   # caddy-network:
   #   external: true

@@ -4,6 +4,7 @@ include:
   - ./keycloak/compose.yml
   - ./gitea/compose.yml
   - ./mattermost/compose.yml
+  - ./wazuh/compose.yml
 
 networks:
   caddy-network:

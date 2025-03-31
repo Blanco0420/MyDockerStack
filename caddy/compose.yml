@@ -3,6 +3,9 @@ services:
     container_name: caddy
     image: ghcr.io/authcrunch/authcrunch:latest
     restart: unless-stopped
+    environment:
+      - SSL_CERT_FILE=/usr/local/share/ca-certificates/ca.crt
+    command: sh -c "update-ca-certificates && caddy run --config /etc/caddy/Caddyfile"
     ports:
       - "80:80"
       - "443:443"
@@ -12,8 +15,9 @@ services:
       - ./site:/srv
       - caddy_data:/data
       - caddy_config:/config
-      - ./certbot/conf/live/phiongroup.com/fullchain.pem:/certs/fullchain.pem:ro
-      - ./certbot/conf/live/phiongroup.com/privkey.pem:/certs/privkey.pem:ro
+      - ../wazuh/config/wazuh_indexer_ssl_certs/wazuh.dashboard.pem:/usr/local/share/ca-certificates/ca.crt:ro
+      - ./certbot/conf/live/genesis-servers.com/fullchain.pem:/certs/fullchain.pem:ro
+      - ./certbot/conf/live/genesis-servers.com/privkey.pem:/certs/privkey.pem:ro
     networks:
       caddy-network:
         ipv4_address: 10.1.1.2
@@ -21,7 +25,7 @@ services:
 
   # certbot:
   #     image: certbot/dns-cloudflare:latest
-  #     command: certonly --dns-cloudflare --dns-cloudflare-credentials /etc/letsencrypt/cloudflare.ini --email site@phiongroup.com --agree-tos --no-eff-email -d phiongroup.com -d *.phiongroup.com
+  #     command: certonly --dns-cloudflare --dns-cloudflare-credentials /etc/letsencrypt/cloudflare.ini --email site@genesis-servers.com --agree-tos --no-eff-email -d genesis-servers.com -d *.genesis-servers.com
   #     volumes:
   #         - ./certbot/conf:/etc/letsencrypt
   #         - ./certbot/logs:/var/log/letsencrypt

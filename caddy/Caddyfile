@@ -1,19 +1,23 @@
-*.phiongroup.com, phiongroup.com {
+*.genesis-servers.com, genesis-servers.com {
 	tls /certs/fullchain.pem /certs/privkey.pem
 }
 
-growi.phiongroup.com {
+growi.genesis-servers.com {
 	reverse_proxy growi:3000
 }
 
-mm.phiongroup.com {
+mm.genesis-servers.com {
 	reverse_proxy mattermost:8065
 }
 
-kc.phiongroup.com {
+kc.genesis-servers.com {
 	reverse_proxy keycloak:8080
 }
 
-gt.phiongroup.com {
+gt.genesis-servers.com {
 	reverse_proxy gitea:3000
+}
+
+wazuh.genesis-servers.com {
+	reverse_proxy https://wazuh.dashboard:5601
 }
