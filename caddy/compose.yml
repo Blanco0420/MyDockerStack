@@ -12,15 +12,24 @@ services:
       - ./site:/srv
       - caddy_data:/data
       - caddy_config:/config
-      - ./certs:/certs:ro
+      - ./certbot/conf/live/phiongroup.com/fullchain.pem:/certs/fullchain.pem:ro
+      - ./certbot/conf/live/phiongroup.com/privkey.pem:/certs/privkey.pem:ro
     networks:
-      - caddy-net
+      caddy-network:
+        ipv4_address: 10.1.1.2
 
+
+  # certbot:
+  #     image: certbot/dns-cloudflare:latest
+  #     command: certonly --dns-cloudflare --dns-cloudflare-credentials /etc/letsencrypt/cloudflare.ini --email site@phiongroup.com --agree-tos --no-eff-email -d phiongroup.com -d *.phiongroup.com
+  #     volumes:
+  #         - ./certbot/conf:/etc/letsencrypt
+  #         - ./certbot/logs:/var/log/letsencrypt
 
 volumes:
   caddy_data:
   caddy_config:
 
-networks:
-  caddy-net:
-    external: true
+# networks:
+#   caddy-network:
+#     external: true

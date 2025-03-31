@@ -1,6 +1,6 @@
 services:
 
-  app:
+  growi:
     container_name: growi
     image: weseek/growi:7
     # ports:
@@ -31,7 +31,7 @@ services:
     volumes:
       - growi_data:/data
     networks:
-      - caddy-net
+      - caddy-network
       - backend
 
   mongo:
@@ -82,5 +82,5 @@ volumes:
 
 networks:
   backend:
-  caddy-net:
-    external: true
+  # caddy-network:
+  #   external: true

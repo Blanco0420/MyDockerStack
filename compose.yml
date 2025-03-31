@@ -1,5 +1,14 @@
 include:
   - ./caddy/compose.yml
-  # - ./growi/compose.yml
+  - ./growi/compose.yml
   - ./keycloak/compose.yml
   - ./gitea/compose.yml
+  - ./mattermost/compose.yml
+
+networks:
+  caddy-network:
+    name: caddy-network
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.1.1.0/24

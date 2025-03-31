@@ -1,27 +1,19 @@
-
-*.internship.local, internship.local {
-	tls /certs/internship.local+1.pem /certs/internship.local+1-key.pem
+*.phiongroup.com, phiongroup.com {
+	tls /certs/fullchain.pem /certs/privkey.pem
 }
 
-http://growi.internship.local {
+growi.phiongroup.com {
 	reverse_proxy growi:3000
 }
 
-mm.internship.local {
-	tls /certs/mattermost.crt /certs/mattermost.key
+mm.phiongroup.com {
 	reverse_proxy mattermost:8065
 }
 
-kc.internship.local {
+kc.phiongroup.com {
 	reverse_proxy keycloak:8080
 }
 
-gt.internship.local {
+gt.phiongroup.com {
 	reverse_proxy gitea:3000
-}
-
-http://test.internship.local {
-	route {
-		authenticate with myportal
-	}
 }
