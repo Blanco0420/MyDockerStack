@@ -1,0 +1,46 @@
+services:
+  nextcloud_db:
+    networks:
+      - nextcloud_backend
+    image: mariadb:10.11
+    restart: always
+    command: --transaction-isolation=READ-COMMITTED
+    volumes:
+      - db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+
+  nextcloud_redis:
+    networks:
+      - nextcloud_backend
+    image: redis:alpine
+    restart: always
+
+  nextcloud:
+    networks:
+      - caddy-network
+      - nexcloud-backend
+    image: nextcloud
+    restart: always
+    # ports:
+      # - 8080:80
+    depends_on:
+      - nextcloud_redis
+      - nextcloud_db
+    volumes:
+      - nextcloud:/var/www/html
+    environment:
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_HOST=db
+
+volumes:
+  nextcloud:
+  db:
+
+networks:
+  nextcloud_backend:
