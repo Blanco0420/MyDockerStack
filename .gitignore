@@ -1,3 +1,6 @@
 **.env
 
 caddy/certbot/
+
+**.key
+**.pem
